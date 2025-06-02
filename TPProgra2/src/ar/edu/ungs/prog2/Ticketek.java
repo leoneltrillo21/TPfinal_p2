@@ -16,6 +16,13 @@ public class Ticketek implements ITicketek {
         this.sedes = new HashMap<>();
     }
 	
+// Método toString()
+    public String toString() {
+        return "Sedes: " + this.sedes.size() + "\n" +
+               "Usuarios: " + this.usuarios.size() + "\n" +
+               "Espectáculos: " + this.espectaculos.size();
+    }
+	
 // SEDES.   
     // Registro de estadios.
 	public void registrarSede(String nombre, String direccion, int capacidadMaxima) {
