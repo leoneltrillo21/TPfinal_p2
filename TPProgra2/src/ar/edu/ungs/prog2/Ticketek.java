@@ -230,24 +230,17 @@ public class Ticketek implements ITicketek {
 	}
 
 	public boolean anularEntrada(IEntrada entrada, String contrasenia) {
-	    if (entrada == null) {
-	        throw new IllegalArgumentException("La entrada no existe.");
-	    }
-	    Entrada ent = (Entrada) entrada;
-		autenticarUsuario(ent.getEmail(), contrasenia);	    
-		verificarFechaPasada(ent.getFecha());
-	    Usuario usuario = buscarUsuario(ent.getEmail());
-	    if (!anularEntrada(ent, usuario)) {
-	        throw new IllegalArgumentException("La entrada ya fue anulada o no existe.");
-	    }
-	    return true;
-	}
-
-	private boolean anularEntrada(Entrada ent, Usuario usuario) {
-	    Espectaculo espectaculo = buscarEspectaculo(ent.getEspectaculo());
-	    boolean resultadoUsuario = usuario.anularEntrada(ent.getCodigo());
-	    boolean resultadoFuncion = espectaculo.anularEntrada(ent.getCodigo(), ent.getFechaString());
-	    return resultadoUsuario && resultadoFuncion;
+		if(entrada == null) throw new IllegalArgumentException("La entrada no existe.");
+	        Entrada ent = (Entrada) entrada;
+		autenticarUsuario(ent.getEmail(), contrasenia); //Verifica que la entrada pertenezca al usuario.
+		verificarFechaPasada(ent.getFecha()); //Permite anular una entrada siempre que la fecha de la función no haya pasado.
+	        Espectaculo espectaculo = buscarEspectaculo(ent.getEspectaculo());
+	        Usuario usuario = buscarUsuario(ent.getEmail());
+		//Se anula la entrada en Usuario y se delega al espectáculo correspondiente lo mismo, si alguno de los dos casos no es posible se lanza una excepción.
+		if(!espectaculo.anularEntrada(ent.getCodigo(), ent.getFechaString()) || !usuario.anularEntrada(ent.getCodigo())) {
+	            throw new IllegalArgumentException("La entrada ya fue anulada o no existe.");			
+		}
+		return true;
 	}
 
 	public IEntrada cambiarEntrada(IEntrada entrada, String contrasenia, String fecha, String sector, int asiento) {
